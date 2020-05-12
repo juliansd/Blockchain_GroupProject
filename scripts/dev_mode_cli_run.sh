@@ -25,6 +25,8 @@ peer chaincode invoke -n tw -c '{"Args":["requestPayment", "trade-1"]}' -C trade
 sleep 2
 peer chaincode invoke -n tw -c '{"Args":["makePayment", "trade-1"]}' -C tradechannel
 sleep 2
+peer chaincode invoke -n tw -c '{"Args":["getAccountBalance", "trade-1", "buyer"]}' -C tradechannel
+sleep 2
 peer chaincode invoke -n tw -c '{"Args":["getAccountBalance", "trade-1", "seller"]}' -C tradechannel
 sleep 2""
 peer chaincode invoke -n tw -c '{"Args":["getAccountBalance", "trade-1", "middleman"]}' -C tradechannel

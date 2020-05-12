@@ -603,7 +603,7 @@ func (t *TradeWorkflowChaincode) requestPayment(stub shim.ChaincodeStubInterface
 		fmt.Printf("Payment request already pending for trade %s\n", args[0])
 	} else {
 		// Check what has been paid up to this point
-		fmt.Printf("Amount paid thus far for trade %s = %d; total required = %d\n", args[0], tradeAgreement.Payment, tradeAgreement.Amount)
+		// fmt.Printf("Amount paid thus far for trade %s = %d; total required = %d\n", args[0], tradeAgreement.Payment, tradeAgreement.Amount)
 		if tradeAgreement.Amount == tradeAgreement.Payment { // Payment has already been settled
 			fmt.Printf("Payment already settled for trade %s\n", args[0])
 			return shim.Error("Payment already settled")
@@ -747,6 +747,7 @@ func (t *TradeWorkflowChaincode) makePayment(stub shim.ChaincodeStubInterface, c
 	if buyBal < paymentAmount {
 		fmt.Printf("Buyer's bank balance %d is insufficient to cover payment amount %d\n", buyBal, paymentAmount)
 	}
+
 	buyBal -= paymentAmount
 
 	// Update ledger state
@@ -957,19 +958,19 @@ func (t *TradeWorkflowChaincode) getAccountBalance(stub shim.ChaincodeStubInterf
 		balanceKey = buyBalKey
 	} else if entity == "middleman" {
 		// Access control: Only an Importer Org member can invoke this transaction
-		if !t.testMode && !authenticateBuyerOrg(creatorOrg, creatorCertIssuer) {
+		if !t.testMode && !authenticateMiddlemanOrg(creatorOrg, creatorCertIssuer) {
 			return shim.Error("Caller not a member of Middleman Org. Access denied.")
 		}
 		balanceKey = midBalKey
 	} else if entity == "warehouse" {
 		// Access control: Only an Importer Org member can invoke this transaction
-		if !t.testMode && !authenticateBuyerOrg(creatorOrg, creatorCertIssuer) {
+		if !t.testMode && !authenticateWarehouseOrg(creatorOrg, creatorCertIssuer) {
 			return shim.Error("Caller not a member of Warehouse Org. Access denied.")
 		}
 		balanceKey = warBalKey
 	} else if entity == "carrier" {
 		// Access control: Only an Importer Org member can invoke this transaction
-		if !t.testMode && !authenticateBuyerOrg(creatorOrg, creatorCertIssuer) {
+		if !t.testMode && !authenticateCarrierOrg(creatorOrg, creatorCertIssuer) {
 			return shim.Error("Caller not a member of Carrier Org. Access denied.")
 		}
 		balanceKey = carBalKey
