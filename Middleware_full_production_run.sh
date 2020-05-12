@@ -18,6 +18,7 @@ rm add_org/docker-compose-lendingOrg.yaml
 
 echo -e "\nNow bringing the network down and back up again\n"
 echo "Y" | ./trade.sh down
+echo "Y" | ./trade.sh down -d true
 echo -e "\nThere may be 'orphans' relating to exportingEntityOrg', so doing another sweep of the containers"
 CONTAINER_IDS=$(docker ps -aq)
 if [ -z "$CONTAINER_IDS" -o "$CONTAINER_IDS" == " " ]; then
@@ -68,46 +69,47 @@ echo -e "\nNow launching createTradeApp.js "
 node createTradeApp.js
 
 echo -e "\nNow launching runTradeScenarioApp.js "
+sleep 2
 
 node runTradeScenarioApp.js
 
-echo -e "\nNow invoking ../network/.trade.sh createneworg"
+# echo -e "\nNow invoking ../network/.trade.sh createneworg"
 
-cd $GOPATH/src/trade-finance-logistics/network
-echo "Y" | ./trade.sh createneworg
+# cd $GOPATH/src/trade-finance-logistics/network
+# echo "Y" | ./trade.sh createneworg
 
-echo -e "\nNow invoking run-upgrade-channel.js in ../middleware"
-cd $GOPATH/src/trade-finance-logistics/middleware
-node run-upgrade-channel.js
+# echo -e "\nNow invoking run-upgrade-channel.js in ../middleware"
+# cd $GOPATH/src/trade-finance-logistics/middleware
+# node run-upgrade-channel.js
 
-echo -e "\nDoing an ls to show that ../midleware/tmp folder was created\n"
-ls
+# echo -e "\nDoing an ls to show that ../midleware/tmp folder was created\n"
+# ls
 
-echo -e "\nNow invoking ../network/.trade.sh startneworg"
-cd $GOPATH/src/trade-finance-logistics/network
-echo "Y" | ./trade.sh startneworg
+# echo -e "\nNow invoking ../network/.trade.sh startneworg"
+# cd $GOPATH/src/trade-finance-logistics/network
+# echo "Y" | ./trade.sh startneworg
 
-echo -e "\nInvoking 'docker ps -a' to see the 2 new containers\n"
-docker ps -a
-
-
-echo -e "\nSleeping 5 seconds so that containers can come up fully; perhaps 1 second is enough"
-echo -e "Then invoking node new-org-join-channel.js in ../middleware\n"
-sleep 5
-cd $GOPATH/src/trade-finance-logistics/middleware
-node new-org-join-channel.js
+# echo -e "\nInvoking 'docker ps -a' to see the 2 new containers\n"
+# docker ps -a
 
 
+# echo -e "\nSleeping 5 seconds so that containers can come up fully; perhaps 1 second is enough"
+# echo -e "Then invoking node new-org-join-channel.js in ../middleware\n"
+# sleep 5
+# cd $GOPATH/src/trade-finance-logistics/middleware
+# node new-org-join-channel.js
 
-echo -e "\nInovking upgrade-chaincode.js to upgrade to trade_workflow_v1"
-echo -e "But again sleeping for 5 seconds because seems necessary\n"
-sleep 5
-node upgrade-chaincode.js
 
-echo -e "\nInvoking five-org-trade-scenario.js to test the new workflow end-to-end"
-echo -e "Again, sleeping first\n"
-sleep 5
-node five-org-trade-scenario.js
+
+# echo -e "\nInovking upgrade-chaincode.js to upgrade to trade_workflow_v1"
+# echo -e "But again sleeping for 5 seconds because seems necessary\n"
+# sleep 5
+# node upgrade-chaincode.js
+
+# echo -e "\nInvoking five-org-trade-scenario.js to test the new workflow end-to-end"
+# echo -e "Again, sleeping first\n"
+# sleep 5
+# node five-org-trade-scenario.js
 
 
 
